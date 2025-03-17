@@ -1,6 +1,7 @@
 from grid import Grid
 from blocks import *
 import random
+import pygame
 
 class Game:
     """A class for the main aspects of the game."""
@@ -12,6 +13,12 @@ class Game:
         self.next_block = self.get_random_block()
         self.game_over = False
         self.score = 0
+        self.rotate_sound = pygame.mixer.Sound("sounds/rotate.ogg")
+        self.clear_sound = pygame.mixer.Sound("sounds/clear.ogg")
+
+        pygame.mixer.music.load("sounds/music.ogg")
+        pygame.mixer.music.set_volume(0.5)
+        pygame.mixer.music.play(-1)
 
     def update_score(self, lines, move_down_points):
         """Update the score based on the number of lines cleared."""
@@ -80,7 +87,9 @@ class Game:
         self.current_block = self.next_block
         self.next_block = self.get_random_block()
         rows_cleared = self.grid.clear_full_rows()
-        self.update_score(rows_cleared, 0)
+        if rows_cleared > 0:
+            self.clear_sound.play()
+            self.update_score(rows_cleared, 0)
         if self.block_fits() == False:
             self.game_over = True
 
@@ -97,6 +106,8 @@ class Game:
         self.current_block.rotate()
         if self.block_inside() == False or self.block_fits() == False:
             self.current_block.undo_rotation()
+        else:
+            self.rotate_sound.play()
 
     def reset(self):
         """Reset the game by resetting the grid, blocks, current block, next block, game over, and score."""
