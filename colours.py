@@ -1,4 +1,5 @@
 class Colours:
+    """A class to store the colours used in the game."""
     dark_grey = (26, 31, 40)
     green = (47, 230, 23)
     red = (232, 18, 18)
@@ -11,6 +12,8 @@ class Colours:
     dark_blue = (44, 44, 127)
     light_blue = (59, 85, 162)
 
+    # Long story short, think static in other languages
     @classmethod
     def get_cell_colors(cls):
+        """Get the colours specifically for the cells."""
         return [cls.dark_grey, cls.green, cls.red, cls.orange, cls.yellow, cls.purple, cls.cyan, cls.blue]
