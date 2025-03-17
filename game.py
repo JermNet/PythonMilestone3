@@ -5,12 +5,25 @@ import random
 class Game:
     """A class for the main aspects of the game."""
     def __init__(self):
-        """Initializes the game with a grid, blocks, current block, next block, and game over."""
+        """Initializes the game with a grid, blocks, current block, next block, game over, and score."""
         self.grid = Grid()
         self.blocks = [IBlock(), JBlock(), LBlock(), OBlock(), SBlock(), TBlock(), ZBlock()]
         self.current_block = self.get_random_block()
         self.next_block = self.get_random_block()
         self.game_over = False
+        self.score = 0
+
+    def update_score(self, lines, move_down_points):
+        """Update the score based on the number of lines cleared."""
+        if lines == 1:
+            self.score += 100
+        elif lines == 2:
+            self.score += 300
+        elif lines == 3:
+            self.score += 500
+        elif lines == 4:
+            self.score += 1000
+        self.score += move_down_points
 
     def get_random_block(self):
         """Get a random block from the blocks list."""
@@ -59,7 +72,8 @@ class Game:
             self.grid.grid[position.row][position.column] = self.current_block.id
         self.current_block = self.next_block
         self.next_block = self.get_random_block()
-        self.grid.clear_full_rows()
+        rows_cleared = self.grid.clear_full_rows()
+        self.update_score(rows_cleared, 0)
         if self.block_fits() == False:
             self.game_over = True
 
@@ -78,8 +92,9 @@ class Game:
             self.current_block.undo_rotation()
 
     def reset(self):
-        """Reset the game by resetting the grid, blocks, current block, next block, and game over."""
+        """Reset the game by resetting the grid, blocks, current block, next block, game over, and score."""
         self.grid.reset()
         self.blocks = [IBlock(), JBlock(), LBlock(), OBlock(), SBlock(), TBlock(), ZBlock()]
         self.current_block = self.get_random_block()
         self.next_block = self.get_random_block()
+        self.score = 0
